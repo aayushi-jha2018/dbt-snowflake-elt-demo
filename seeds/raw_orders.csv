@@ -1,0 +1,9 @@
+order_id,customer_id,order_date,status,order_amount
+101,1,2023-04-01,placed,49.99
+102,1,2023-04-15,shipped,89.50
+103,2,2023-04-03,delivered,120.00
+104,3,2023-04-10,cancelled,35.20
+105,4,2023-04-12,delivered,60.00
+106,5,2023-04-18,returned,75.25
+107,2,2023-05-01,placed,42.10
+108,3,2023-05-05,shipped,99.99
