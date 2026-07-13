@@ -1,5 +1,8 @@
 # dbt-snowflake-elt-demo
 
+[![CI](https://github.com/aayushi-jha2018/dbt-snowflake-elt-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/aayushi-jha2018/dbt-snowflake-elt-demo/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 A small dbt project demonstrating a staging -> marts ELT pattern for Snowflake: raw seed data, cleaned staging models, an incremental fact table, and schema tests. This mirrors the modelling approach used in the real-time pricing pipeline and dbt ELT work described in my [portfolio](https://github.com/aayushi-jha2018/portfolio), scaled down to a runnable example.
 
 ## Architecture
