@@ -5,7 +5,9 @@ sources:
     schema: raw
     tables:
       - name: customers
+        identifier: raw_customers
       - name: orders
+        identifier: raw_orders
 
 models:
   - name: stg_customers
