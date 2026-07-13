@@ -57,6 +57,7 @@ jobs:
               ci:
                 type: duckdb
                 path: 'ci.duckdb'
+                schema: raw
           EOF
       - name: Seed, run, and test the pipeline against real (local) data
         run: |
