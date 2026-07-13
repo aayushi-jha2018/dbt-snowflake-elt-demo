@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dbt-snowflake
+        run: pip install dbt-snowflake
+      - name: Write dummy profiles.yml (no real credentials, parse-only)
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << 'EOF'
+          snowflake_elt_demo:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: ci-placeholder
+                user: ci-placeholder
+                password: ci-placeholder
+                role: ci-placeholder
+                database: ci-placeholder
+                warehouse: ci-placeholder
+                schema: ci-placeholder
+          EOF
+      - name: Validate project (parse only, no warehouse connection)
+        run: dbt parse
