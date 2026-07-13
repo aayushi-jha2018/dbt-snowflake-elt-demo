@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: customers
+      - name: orders
+
+models:
+  - name: stg_customers
+    description: One row per customer, with cleaned column names and types.
+    columns:
+      - name: customer_id
+        description: Primary key for a customer.
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: One row per order, with cleaned column names and standardized status values.
+    columns:
+      - name: order_id
+        description: Primary key for an order.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['placed', 'shipped', 'delivered', 'cancelled', 'returned']
