@@ -36,3 +36,43 @@ jobs:
           EOF
       - name: Validate project (parse only, no warehouse connection)
         run: dbt parse
+
+  test-duckdb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dbt-duckdb
+        run: pip install dbt-duckdb
+      - name: Write DuckDB profile (runs the real pipeline locally, no cloud credentials)
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << 'EOF'
+          snowflake_elt_demo:
+            target: ci
+            outputs:
+              ci:
+                type: duckdb
+                path: 'ci.duckdb'
+          EOF
+      - name: Seed, run, and test the pipeline against real (local) data
+        run: |
+          dbt seed
+          dbt run
+          dbt test
+      - name: Inject a data-quality violation and confirm dbt test catches it
+        run: |
+          cp seeds/raw_orders.csv /tmp/raw_orders_good.csv
+          printf '109,1,2023-05-10,not_a_status,10.00\n' >> seeds/raw_orders.csv
+          dbt seed --full-refresh
+          dbt run
+          if dbt test; then
+            echo 'Expected dbt test to fail on injected bad data, but it passed.'
+            exit 1
+          else
+            echo 'dbt test correctly failed on injected bad data.'
+          fi
+          cp /tmp/raw_orders_good.csv seeds/raw_orders.csv
